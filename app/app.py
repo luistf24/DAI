@@ -16,19 +16,19 @@ def hello_world():
   return 'Hello, World!'
 
 
-@app.route('/prueba/ejercicio1/<int:numero>')
+@app.route('/ejercicio1/<int:numero>')
 def ejercicio1(numero):
     return str(criba(numero))
 
-@app.route('/prueba/ejercicio2')
+@app.route('/ejercicio2')
 def ejercicio2():
     suf()
     return 'La salida está en el archivo ./archivos/salida.txt'
 
-@app.route('/prueba/ejercicio3')
+@app.route('/ejercicio3')
 def ejercicio3():
     return corchetes()
 
-@app.route('/prueba/imagenes')
+@app.route('/imagenes')
 def imagen():
     return render_template('index.html')
