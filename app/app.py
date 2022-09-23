@@ -1,14 +1,16 @@
 #./app/app.py
 
-from ejemplos.criba import criba
-from ejemplos.sf import suf
-from ejemplos.cor import corchetes
-
-from flask import Flask
+from flask import Flask, render_template
 from markupsafe import escape
 
-app = Flask(__name__)
-          
+from ejercicios0.criba import criba
+from ejercicios0.sf import suf
+from ejercicios0.cor import corchetes
+
+import os
+
+app = Flask(__name__, template_folder='static')
+
 @app.route('/Hello')
 def hello_world():
   return 'Hello, World!'
@@ -27,4 +29,6 @@ def ejercicio2():
 def ejercicio3():
     return corchetes()
 
-
+@app.route('/prueba/imagenes')
+def imagen():
+    return render_template('index.html')
