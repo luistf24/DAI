@@ -54,3 +54,8 @@ def ejercicio4_3(tarjeta):
 @app.route('/imagenes')
 def imagen():
     return render_template('index.html')
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404
