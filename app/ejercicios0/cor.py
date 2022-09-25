@@ -3,52 +3,32 @@
 from random import seed
 from random import randint
 
-def corchetes():
+def corchetes(longitud_max):
+    longitud = randint(2, longitud_max)
+    corchetes = ""
 
-    aleatorio = randint(0, 1)
+    for i in range(longitud):
+        cor_der = randint(0, 1)
 
-    S       = []
-    A       = []
-    B       = []
-    salida  = ""
-
-    S.append(("[", 'A'))
-    S.append(("", 'B'))
-
-    A.append(("]", 'B*'))
-    A.append(("]", '*B'))
-
-    B.append(("[", '*A'))
-    B.append(("", 'E'))
-
-    fin     = True
-    actual  = S[aleatorio]
-
-    while fin:
-        if actual[1] == 'A':
-            salida = actual[0] + salida
-            actual = B[randint(0, 1)]
-
-        elif actual[1] == '*A':
-            salida = actual[0] + salida
-            actual = A[randint(0, 1)]
-
-        elif actual[1] == 'B':
-            actual = B[randint(0, 1)]
-
-        elif actual[1] == 'B*':
-            salida = salida + actual[0] 
-            actual = B[randint(0, 1)]
-
-        elif actual[1] == '*B':
-            salida = actual[0] + salida
-            actual = B[randint(0, 1)]
-
+        if cor_der == 0:
+            corchetes += ']'
         else:
-            actual = 'E'
-            fin = False
+            corchetes += '['
 
-    return salida
-
+    return  corchetes
 
 
+
+def es_correcto(cadena_cor):
+    numcor = 0
+
+    for cor in cadena_cor:
+        if cor == '[':
+            numcor += 1
+        else:
+            numcor -= 1
+
+            if numcor < 0:
+                return False
+
+    return numcor == 0
