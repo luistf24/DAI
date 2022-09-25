@@ -29,6 +29,9 @@ def es_correcto(cadena_cor):
             numcor -= 1
 
             if numcor < 0:
-                return False
+                return cadena_cor + ' no es una cadena válida'
 
-    return numcor == 0
+    if numcor == 0:
+        return cadena_cor + ' es una cadena válida'
+    else:
+        return cadena_cor + ' no es una cadena válida'

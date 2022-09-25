@@ -33,7 +33,7 @@ def ejercicio2():
 
 @app.route('/ejercicio3')
 def ejercicio3():
-    return str(es_correcto(corchetes(100)))
+    return es_correcto(corchetes(100))
 
 
 @app.route('/ejercicio4/apellido_n/<string:apellido>')
