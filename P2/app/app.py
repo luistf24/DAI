@@ -32,14 +32,15 @@ def mongo():
     # Devolver en JSON al cliente cambiando la cabecera http para especificar que es un json
     return Response(resJson, mimetype='application/json')
 
-@app.route('/recetas_de/cuba_libre')
-def cuba_libre():
 
-    recetas = db.recipes.find({ 'slug': 'cuba-libre' }) 
+@app.route('/recetas_de/<string:receta>')
+def cuba_libre(receta):
+
+    recetas = db.recipes.find({ 'slug': receta}) 
 
     lista_recetas = []
     for  receta in recetas:
-        app.logger.debug(receta)  # salida consola
+        app.logger.debug(receta)  
         lista_recetas.append(receta)
 
     response = {
@@ -47,8 +48,7 @@ def cuba_libre():
         'data': lista_recetas
     }
 
-    # Convertimos los resultados a formato JSON
     resJson = dumps(response)
 
-    # Devolver en JSON al cliente cambiando la cabecera http para especificar que es un json
     return Response(resJson, mimetype='application/json')
+
