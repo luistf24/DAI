@@ -34,9 +34,49 @@ def mongo():
 
 
 @app.route('/recetas_de/<string:receta>')
-def cuba_libre(receta):
+def recetas_de(receta):
 
-    recetas = db.recipes.find({ 'slug': receta}) 
+    recetas = db.recipes.find({ 'name': receta}) 
+
+    lista_recetas = []
+    for  receta in recetas:
+        app.logger.debug(receta)  
+        lista_recetas.append(receta)
+
+    response = {
+        'len': len(lista_recetas),
+        'data': lista_recetas
+    }
+
+    resJson = dumps(response)
+
+    return Response(resJson, mimetype='application/json')
+
+
+@app.route('/recetas_con/<string:receta>')
+def recetas_con(receta):
+
+    recetas = db.recipes.find({ 'ingredients.name': {'$regex': receta, '$options': 'i'}}) 
+
+    lista_recetas = []
+    for  receta in recetas:
+        app.logger.debug(receta)  
+        lista_recetas.append(receta)
+
+    response = {
+        'len': len(lista_recetas),
+        'data': lista_recetas
+    }
+
+    resJson = dumps(response)
+
+    return Response(resJson, mimetype='application/json')
+
+
+@app.route('/recetas_compuestas_de/<int:receta>/ingredientes')
+def recetas_compuestas_de(receta):
+
+    recetas = db.recipes.find({ 'ingredients': {'$size': receta}}) 
 
     lista_recetas = []
     for  receta in recetas:
