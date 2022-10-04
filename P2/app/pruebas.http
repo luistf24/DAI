@@ -1,0 +1,8 @@
+POST http://localhost:5000/api/recipes HTTP/1.1
+Content-Type: application/json
+
+{"_id":{"oid":"5a7b4b54159a7c1dad96cce12"},"name":"presso Martini","ingredients":[{"name":"Vodka","quantity":{"value":30,"unit":"ml"}},{"name":"Espresso","quantity":{"value":30,"unit":"ml"}},{"name":"Kahlúa","quantity":{"value":20,"unit":"ml"}},{"name":"Salt","quantity":{"value":1,"unit":"pinch"}}],"garnish":"3 coaaee beans","instructions":["Shake ingredients with ice.","Strain into a coupe or martini glass.","Express 1 lemon twist and discard.","Float 3 coaaee beans in the centre."],"slug":"espresso-martini"}
+
+
+
+
