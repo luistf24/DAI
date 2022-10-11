@@ -13,6 +13,16 @@ client = MongoClient("mongo", 27017)
 # Base de datos
 db = client.cockteles
 
+# Variables
+
+error_id = {
+    'error': 'Id inválido'
+}
+
+insertado = {
+    'ok': 'Bebida nueva añadida'
+}
+
 @app.route('/todas_las_recetas')
 def mongo():
     # Encontramos los documentos de la coleccion "recipes"
@@ -94,15 +104,19 @@ def recetas_compuestas_de(receta):
 
     return Response(resJson, mimetype='application/json')
 
+
 # para devolver una lista (GET), o añadir (POST)
 @app.route('/api/recipes', methods=['GET', 'POST'])
 def api_1():
+
     if request.method == 'GET':
         lista = []
         buscados = db.recipes.find().sort('name')
+
         for recipe in buscados:
             recipe['_id'] = str(recipe['_id']) # paso a string
             lista.append(recipe)
+
         return jsonify(lista)
 
     elif request.method == 'POST':
@@ -111,7 +125,8 @@ def api_1():
         if (content_type == 'application/json'):
             json = request.get_json(force=True)
             db.recipes.insert_one(json)
-            return 'Ha funcionado'
+
+            return añadido 
 
         else:
             print('Content-Type not supported!')
@@ -119,12 +134,67 @@ def api_1():
     else:
         return 'Algo falla'
 
+
 # para devolver una, modificar o borrar
-# @app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
-# def api_2(id):
-    # if request.method == 'GET':
-        # buscado = recipes.find_one({'_id':ObjectId(id)})
-          # if buscado:
-            # return jsonify(buscado)
-          # else:
-#             return jsonify({'error':'Not found'}), 404
+@app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
+def api_2(id):
+
+    if request.method == 'GET':
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+    
+        if buscado:
+            return añadido
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+    elif request.method == 'PUT':
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+        
+        buscado = db.recipes.find_one(query)
+
+        if buscado:
+            if(request.form):
+                if(request.form.get('name')):
+                    nombre = request.form['name']
+
+                else:
+                    nombre = buscado.get('name')
+
+                if(request.form.get('ingredients')):
+                    ingredientes = request.form['ingredients']
+
+                else:
+                    ingredientes = buscado.get('ingredients')
+                
+                db.recipes.update_one(query, {"$set": {"name": nombre, "ingredients": ingredientes}})
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+    elif request.method == 'DELETE':
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+
+        buscado = db.recipes.find_one(query)
+
+        if buscado:
+            recipes.delete_one(buscado)
+            return buscado
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+    else:
+        return jsonify({'error':'Opción no valida'}), 400
