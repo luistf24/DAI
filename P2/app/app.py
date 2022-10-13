@@ -146,8 +146,10 @@ def api_2(id):
         except:
             return jsonify(error_id)
     
+        buscado = db.recipes.find_one(query)
+
         if buscado:
-            return añadido
+            return buscado 
 
         else:
             return jsonify({'error':'Not found'}), 404
