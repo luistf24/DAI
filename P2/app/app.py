@@ -126,7 +126,7 @@ def api_1():
             json = request.get_json(force=True)
             db.recipes.insert_one(json)
 
-            return añadido 
+            return 'Ha funcionado'
 
         else:
             print('Content-Type not supported!')
@@ -149,7 +149,7 @@ def api_2(id):
         buscado = db.recipes.find_one(query)
 
         if buscado:
-            return buscado 
+            return dumps(buscado)
 
         else:
             return jsonify({'error':'Not found'}), 404
@@ -178,6 +178,7 @@ def api_2(id):
                     ingredientes = buscado.get('ingredients')
                 
                 db.recipes.update_one(query, {"$set": {"name": nombre, "ingredients": ingredientes}})
+            return ({'message': 'Se ha modificado correctamente'})
 
         else:
             return jsonify({'error':'Not found'}), 404
@@ -192,8 +193,8 @@ def api_2(id):
         buscado = db.recipes.find_one(query)
 
         if buscado:
-            recipes.delete_one(buscado)
-            return buscado
+            db.recipes.delete_one(buscado)
+            return dumps(buscado)
 
         else:
             return jsonify({'error':'Not found'}), 404
