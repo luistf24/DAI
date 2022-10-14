@@ -1,27 +1,19 @@
 from bson.json_util import dumps
-from bson import BSON
+from bson import BSON, ObjectId
 from pymongo import MongoClient
 
 from flask import Flask, Response, request, jsonify
-from bson import ObjectId
+from flask_restful import Resource, Api
+
 
 app = Flask(__name__)
+api = Api(app)
 
 # Conectar al servicio (docker) "mongo" en su puerto estandar
 client = MongoClient("mongo", 27017)
 
 # Base de datos
 db = client.cockteles
-
-# Variables
-
-error_id = {
-    'error': 'Id inválido'
-}
-
-insertado = {
-    'ok': 'Bebida nueva añadida'
-}
 
 @app.route('/todas_las_recetas')
 def mongo():
@@ -107,12 +99,12 @@ def recetas_compuestas_de(receta):
 
 # para devolver una lista (GET), o añadir (POST)
 @app.route('/api/recipes', methods=['GET', 'POST'])
-def api_1():
+def api_1_1():
 
     if request.method == 'GET':
         lista = []
+        
         buscados = db.recipes.find().sort('name')
-
         for recipe in buscados:
             recipe['_id'] = str(recipe['_id']) # paso a string
             lista.append(recipe)
@@ -124,20 +116,19 @@ def api_1():
         
         if (content_type == 'application/json'):
             json = request.get_json(force=True)
-            db.recipes.insert_one(json)
+            ret = db.recipes.insert_one(json)
 
-            return 'Ha funcionado'
+            query = {"_id": ret.inserted_id()}
+
+            return dumps(query)
 
         else:
-            print('Content-Type not supported!')
-
-    else:
-        return 'Algo falla'
+            return jsonify({'error':'Content-Type not supported!'}), 500
 
 
 # para devolver una, modificar o borrar
 @app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
-def api_2(id):
+def api_1_2(id):
 
     if request.method == 'GET':
         try:
@@ -167,18 +158,19 @@ def api_2(id):
             if(request.form):
                 if(request.form.get('name')):
                     nombre = request.form['name']
-
-                else:
-                    nombre = buscado.get('name')
+                    db.recipes.update_one(query, {"$set": {"name": nombre}})
 
                 if(request.form.get('ingredients')):
                     ingredientes = request.form['ingredients']
+                    ingrediente = db.recipes.find({ query}, {'ingredients.name': {'$regex': ingredientes}}) 
 
-                else:
-                    ingredientes = buscado.get('ingredients')
-                
-                db.recipes.update_one(query, {"$set": {"name": nombre, "ingredients": ingredientes}})
-            return ({'message': 'Se ha modificado correctamente'})
+                    if(ingrediente.count() == 0):
+                        db.recipies.update_one(query, {"$push": {"ingredients": ingredientes}})
+
+                    else:
+                        db.recipes.update_one(query, {ingrediente: ingredientes})
+
+            return dumps(query)
 
         else:
             return jsonify({'error':'Not found'}), 404
@@ -194,10 +186,115 @@ def api_2(id):
 
         if buscado:
             db.recipes.delete_one(buscado)
-            return dumps(buscado)
+            return dumps(query)
 
         else:
             return jsonify({'error':'Not found'}), 404
 
     else:
         return jsonify({'error':'Opción no valida'}), 400
+
+
+class Api_2_1(Resource):
+
+    def get(self):
+
+        lista = []
+        
+        buscados = db.recipes.find().sort('name')
+        for recipe in buscados:
+            recipe['_id'] = str(recipe['_id']) # paso a string
+            lista.append(recipe)
+
+        return jsonify(lista)
+
+
+    def post(self):
+
+        content_type = request.headers.get('Content-Type')
+        
+        if (content_type == 'application/json'):
+            json = request.get_json(force=True)
+            ret = db.recipes.insert_one(json)
+
+            query = {"_id": ret.inserted_id()}
+
+            return dumps(query)
+
+        else:
+            return jsonify({'error':'Content-Type not supported!'}), 500
+
+
+class Api_2_2(Resource):
+
+    def get(self, id):
+
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+    
+        buscado = db.recipes.find_one(query)
+
+        if buscado:
+            return dumps(buscado)
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+
+    def put(self, id):
+
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+        
+        buscado = db.recipes.find_one(query)
+
+        if buscado:
+            if(request.form):
+                if(request.form.get('name')):
+                    nombre = request.form['name']
+                    db.recipes.update_one(query, {"$set": {"name": nombre}})
+
+                if(request.form.get('ingredients')):
+                    ingredientes = request.form['ingredients']
+                    ingrediente = db.recipes.find({ query}, {'ingredients.name': {'$regex': ingredientes}}) 
+
+                    if(ingrediente.count() == 0):
+                        db.recipies.update_one(query, {"$push": {"ingredients": ingredientes}})
+
+                    else:
+                        db.recipes.update_one(query, {ingrediente: ingredientes})
+
+            return dumps(query)
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+
+    def delete(self, id):
+
+        try:
+            query = {"_id": ObjectId(id) }
+
+        except:
+            return jsonify(error_id)
+
+        buscado = db.recipes.find_one(query)
+
+        if buscado:
+            db.recipes.delete_one(buscado)
+            return dumps(query)
+
+        else:
+            return jsonify({'error':'Not found'}), 404
+
+
+api.add_resource(Api_2_1, '/api2/recipes/')
+api.add_resource(Api_2_2, '/api2/recipes/<id>')
+
+
