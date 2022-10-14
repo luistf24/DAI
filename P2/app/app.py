@@ -222,7 +222,7 @@ class Api_2_1(Resource):
             return dumps(query)
 
         else:
-            return jsonify({'error':'Content-Type not supported!'}), 500
+            return {'error':'Content-Type not supported!'}, 500
 
 
 class Api_2_2(Resource):
@@ -241,7 +241,7 @@ class Api_2_2(Resource):
             return dumps(buscado)
 
         else:
-            return jsonify({'error':'Not found'}), 404
+            return {'error':'Not found'}, 404
 
 
     def put(self, id):
@@ -273,7 +273,7 @@ class Api_2_2(Resource):
             return dumps(query)
 
         else:
-            return jsonify({'error':'Not found'}), 404
+            return {'error':'Not found'}, 404
 
 
     def delete(self, id):
@@ -291,10 +291,12 @@ class Api_2_2(Resource):
             return dumps(query)
 
         else:
-            return jsonify({'error':'Not found'}), 404
+            return {'error':'Not found'}, 404
+
 
 
 api.add_resource(Api_2_1, '/api2/recipes/')
 api.add_resource(Api_2_2, '/api2/recipes/<id>')
 
-
+if __name__ == '__main__':
+    app.run(debug=True)
