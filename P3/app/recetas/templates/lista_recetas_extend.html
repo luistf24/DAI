@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+
+{% block lista_recetas %}
+
+	{% for busqueda in busquedas %} 
+		<div>
+			<h2><a href="">{{ busqueda.nombre }}</a></h2>
+			<p><b>Preparación:</b> {{ busqueda.preparación|linebreaksbr }}</p>
+			<p><img src="static/{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
+		</div>
+	{% endfor %}
+
+{% endblock lista_recetas %}
