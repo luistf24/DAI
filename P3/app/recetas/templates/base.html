@@ -1,9 +1,11 @@
 {% load static %}
+<!DOCTYPE html>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
 
 <html>
 	<head>
@@ -14,12 +16,16 @@
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/">Práctica3</a>
 				<form class="d-flex" role="search" method="GET" action="/">
+					<a href="{% url 'new_receta' %}" class="top-menu">
+						<button class="btn btn-sm btn-outline-secondary" type="button" onclick="">Añadir Receta</button>
+					</a>
 					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Nocturno</button>
 					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="busqueda">
 					<button class="btn btn-outline-success" type="submit">Search</button>
 				</form>
 			</div>
 		</nav>
+
 		{% block lista_recetas %}
 		{% endblock lista_recetas %}
 	

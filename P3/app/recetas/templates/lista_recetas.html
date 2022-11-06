@@ -6,7 +6,8 @@
 	{% for busqueda in busquedas %} 
 		<div>
 			<h2><a href="/?busqueda={{ busqueda.nombre }}">{{ busqueda.nombre }}</a></h2>
-			<p><img src="static/{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
+
+			<p><img src="{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
 		</div>
 	{% endfor %}
 

@@ -7,7 +7,12 @@
 		<div>
 			<h2><a href="">{{ busqueda.nombre }}</a></h2>
 			<p><b>Preparación:</b> {{ busqueda.preparación|linebreaksbr }}</p>
-			<p><img src="static/{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
+			<p><img src="{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
+			<form method="delete">
+				<input type="hidden" value="{{ busqueda.nombre }}" name="delete_receta">
+				<button class="btn btn-sm btn-outline-secondary" type="Submit">Borrar</button>
+			</form>
+			<a href="{% url 'edit_receta' %}?edit_receta={{ busqueda.nombre }}" class="top-menu"><button class="btn btn-sm btn-outline-secondary" type="button" value="{{ busqueda.nombre }}" name="edit_receta">Editar</button></a>
 		</div>
 	{% endfor %}
 

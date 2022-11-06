@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2!(ir7qldm-vq)d7cixf$y3g(bu0^#fhte^h#zak8u_#$yntv&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.91', 'localhost',]
 
 
 # Application definition
@@ -83,8 +83,8 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'recetas/static/media') 
-MEDIA_URL = '/recetas/static/media/'
+# MEDIA_ROOT =  os.path.join(BASE_DIR, 'static') 
+# MEDIA_URL = '/static/media/'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -116,13 +116,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
