@@ -1,19 +1,26 @@
 
 {% extends "base.html" %}
 
-{% block lista_recetas %}
+{% block content %}
 
 	{% for busqueda in busquedas %} 
 		<div>
 			<h2><a href="">{{ busqueda.nombre }}</a></h2>
 			<p><b>Preparación:</b> {{ busqueda.preparación|linebreaksbr }}</p>
 			<p><img src="{{ BASIC_DIR }}/{{ busqueda.fotos }}"></p>
-			<form method="delete">
-				<input type="hidden" value="{{ busqueda.nombre }}" name="delete_receta">
-				<button class="btn btn-sm btn-outline-secondary" type="Submit">Borrar</button>
-			</form>
-			<a href="{% url 'edit_receta' %}?edit_receta={{ busqueda.nombre }}" class="top-menu"><button class="btn btn-sm btn-outline-secondary" type="button" value="{{ busqueda.nombre }}" name="edit_receta">Editar</button></a>
+
+			{% if user.is_staff %}
+				<a href="{% url 'edit_receta' %}?edit_receta={{ busqueda.nombre }}" class="top-menu"><button class="btn btn-sm btn-outline-secondary" type="button" value="{{ busqueda.nombre }}" name="edit_receta">Editar</button></a>
+			{% endif %}
+
+			{% if user.is_superuser %}
+				<form method="delete">
+					<input type="hidden" value="{{ busqueda.nombre }}" name="delete_receta">
+					<button class="btn btn-sm btn-outline-secondary" type="Submit">Borrar</button>
+				</form>
+			{% endif %}
+
 		</div>
 	{% endfor %}
 
-{% endblock lista_recetas %}
+{% endblock content %}
