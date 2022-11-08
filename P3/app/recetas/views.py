@@ -13,6 +13,7 @@ def index(request):
 
     elif request.GET.get('delete_receta') != None:
         Receta.objects.filter(nombre=request.GET.get('delete_receta')).delete()
+        messages.info(request, 'La receta ha sido borrada')
         return redirect('index')
 
     else:
@@ -30,6 +31,7 @@ def new_receta(request):
             receta  = form.instance
             receta.save()
             
+            messages.info(request, 'La receta ha sido añadida')
             return redirect('index')
 
     else:
@@ -47,6 +49,7 @@ def edit_receta(request):
             receta  = form.instance
             receta.save()
             
+            messages.info(request, 'La receta ha sido editada')
             return redirect('index')
 
     else:

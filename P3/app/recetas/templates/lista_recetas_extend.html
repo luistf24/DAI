@@ -14,13 +14,53 @@
 			{% endif %}
 
 			{% if user.is_superuser %}
-				<form method="delete">
-					<input type="hidden" value="{{ busqueda.nombre }}" name="delete_receta">
-					<button class="btn btn-sm btn-outline-secondary" type="Submit">Borrar</button>
-				</form>
+				<button id="myBtn" class="btn btn-sm btn-outline-secondary">Borrar</button>
 			{% endif %}
-
 		</div>
+
+			<div id="myModal" class="modal">
+
+  				<div class="modal-content">
+					<p>Esta seguro de que quiere borrar: <b>{{ busqueda.nombre }}</b></p>
+
+				<span>
+					<form method="delete">
+						<input type="hidden" value="{{ busqueda.nombre }}" name="delete_receta">
+						<button class="btn btn-sm btn-outline-danger" type="Submit">Borrar</button>
+					</form>
+
+					<button class="btn btn-sm btn-outline-secondary" id="cerrar">Cerrar</button>
+				</span>
+  		</div>
+	</div> 
 	{% endfor %}
+
+<script>
+	// Get the modal
+	var modal = document.getElementById("myModal");
+
+	// Get the button that opens the modal
+	var btn = document.getElementById("myBtn");
+
+	// Get the <span> element that closes the modal
+	var btnc = document.getElementById("cerrar");
+
+	// When the user clicks on the button, open the modal
+	btn.onclick = function() {
+  		modal.style.display = "block";
+	}
+
+	// When the user clicks on <span> (x), close the modal
+	btnc.onclick = function() {
+  		modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+  		if (event.target == modal) {
+    		modal.style.display = "none";
+  		}
+	} 
+</script>
 
 {% endblock content %}
