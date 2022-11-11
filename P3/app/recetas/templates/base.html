@@ -12,6 +12,17 @@
 		<title>Práctica 3</title>
 	</head>
 	<body>
+
+		<script>
+			var cuerpoweb = document.body;
+			if(localStorage.getItem('Modo') == 'Oscuro') {
+				cuerpoweb.classList.toggle("claro"); 
+			}
+			else{
+				cuerpoweb.classList.toggle("oscuro"); 
+			}		
+		</script>
+
 		<nav class="navbar bg-light">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/">Práctica3</a>
@@ -23,7 +34,7 @@
 						</a>
 					{% endif %}
 
-					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Nocturno</button>
+					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Oscuro</button>
 					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="busqueda">
 					<button class="btn btn-outline-success" type="submit">Search</button>
 				</form>
@@ -58,19 +69,38 @@
 
 		<script type="text/javascript">
 			function changeMode() { 
-				var cuerpoweb = document.body; 
-				cuerpoweb.classList.toggle("oscuro"); 
+				var cuerpoweb = document.body;
+				if(localStorage.getItem('Modo') == 'Oscuro') {
+					cuerpoweb.classList.toggle("claro"); 
+					localStorage.setItem('Modo', 'Claro')
+					location.reload( true )
+				}
+				else{
+					cuerpoweb.classList.toggle("oscuro"); 
+					localStorage.setItem('Modo', 'Oscuro')
+					location.reload( true )
+				}
 			} 
+		</script>	
+
+		<script type="text/javascript">
+
 		</script>	
 	
 		{% if messages and  messages.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-			<script>
+			<script type="text/javascript">
 				var modal = document.getElementById("mensaje");
 
 				var btnc = document.getElementsByClassName("close")[0];
 				btnc.onclick = function() {
   					modal.style.display = "none";
 				}
+
+				window.onclick = function(event) {
+  					if (event.target == modal) {
+    					modal.style.display = "none";
+  					}
+				} 
 			</script>		
 		{% endif %}
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Receta
+from .models import Receta, Ingrediente
 from .forms import RecetaForm
 
 # Create your views here.
@@ -9,7 +9,8 @@ def index(request):
 
     if request.GET.get('busqueda') != None: 
         busquedas = Receta.objects.filter(nombre = request.GET.get('busqueda') )
-        return render(request, 'lista_recetas_extend.html', {'busquedas': busquedas})
+        ingredientes = Ingrediente.objects.filter(receta = busquedas[0] )
+        return render(request, 'lista_recetas_extend.html', {'busquedas': busquedas, 'ingredientes': ingredientes})
 
     elif request.GET.get('delete_receta') != None:
         Receta.objects.filter(nombre=request.GET.get('delete_receta')).delete()

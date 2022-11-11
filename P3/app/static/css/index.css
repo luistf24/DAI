@@ -16,6 +16,11 @@ div {
     color: #f1eded; 
 }
 
+.claro{ 
+	background-color: #fcfcfc; 
+    color: #343434; 
+}
+
  /* The Modal (background) */
 .modal {
 	display: none; /* Hidden by default */
@@ -54,7 +59,6 @@ div {
 	text-decoration: none;
 	cursor: pointer;
 } 
-
 
 .buttons {
 	width: 200px;
