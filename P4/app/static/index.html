@@ -198,8 +198,8 @@
 
 	html_str += 
 		`
-	   			<br>
-				 <div class="form-group">
+			<div class="form-group">
+	   				<br>
                         <div>
 	   						<button type="button" class="btn btn-success" onclick="add()">Continuar</button>
                         </div>
@@ -213,46 +213,32 @@
   function add() {
 	let ing;
 	let can;
+	let temp1;
+	let temp2;
+	let temp;
+
 	for(i=0; i< num_ingredients; i++) {
 		ing = "ing_"+i;
 		can = "can_"+i;
-		ingredients_list.push(document.getElementById(ing).value);
+		temp1 = document.getElementById(ing).value;
+		temp2 = document.getElementById(can).value;
 		cantindad_list.push(document.getElementById(can).value);
+		temp = '{"name":'+temp1+',"quantity":{"quantity":'+temp2+',"unit":"oz"}}';
+		ingredients_list.push(temp);
 	}
-
-	let html_str = "Listas: "; 
-	html_str += 
-		`
-			<form role="form">
-                    <div class="form-group">
-	   					Instruciones:${instructions_list}
-						<br>
-	   					Ingredientes:${ingredients_list}
-	   					<br>
-	   					Cantidades:${cantindad_list}
-	   					<br>
-	  				</div>
-	   		</form>
-		`
-	$("#modal_title_create").html(name)
-	$("#modal_body_create").html(html_str);
-  }
-
-  function klkmanin() {
+	
+	data = '{"name":'+name+',"instructions":'+instructions_list+',"ingredientes":'+ingredients_list+'"slug":"slug"}';
 	fetch('http://localhost:5000/api/recipes', {
   		method: 'POST',
-  		body: JSON.stringify({
-    		name:name,
-    		instructions:instructions,
-			ingredients:ingredients,
-			slug:slug,
-  		}),
+  		body: data,
   		headers: {
     		'Content-type': 'application/json; charset=UTF-8',
   		}
   	});
+
 	location.reload( true )
   }
+
 
 function editar(i,j) {  // saca un modal con la información de cada coctel
 	let html_str = 
