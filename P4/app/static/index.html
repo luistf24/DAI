@@ -21,9 +21,11 @@
 
 		<nav class="navbar bg-light">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="/">Práctica4</a>
+				<a class="navbar-brand" href="/">Práctica 4</a>
 
 					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Oscuro</button>
+					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(1.1)">+</button>
+					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(0.9)">-</button>
 					<button type="button" class="btn btn-primary btn-sm" onclick="add_1()" data-toggle="modal" data-target="#createModal">Añadir receta</button>
 			</div>
 		</nav>
@@ -38,7 +40,13 @@
 					localStorage.setItem('Modo', 'Oscuro')
 					location.reload( true )
 				}
-			} 
+			}
+
+			function changeSize(size) {
+				let currentZoom = parseFloat(document.body.style.zoom) || 1
+   				document.body.style.zoom = currentZoom * size
+				
+			}
 
 		</script>	
 <script>
@@ -223,18 +231,33 @@
 		temp1 = document.getElementById(ing).value;
 		temp2 = document.getElementById(can).value;
 		cantindad_list.push(document.getElementById(can).value);
-		temp = '{"name":'+temp1+',"quantity":{"quantity":'+temp2+',"unit":"oz"}}';
+		temp = {
+			name: temp1,
+			quantity: {
+				quantity: temp2,
+				unit: "oz"
+			}
+		}
 		ingredients_list.push(temp);
 	}
 	
-	data = '{"name":'+name+',"instructions":'+instructions_list+',"ingredientes":'+ingredients_list+'"slug":"slug"}';
+	data= {
+		name: name,
+		instructions: instructions_list,
+		ingredients: ingredients_list,
+		slug: "slug"
+	}
+
 	fetch('http://localhost:5000/api/recipes', {
   		method: 'POST',
-  		body: data,
+  		body: JSON.stringify(data),
   		headers: {
-    		'Content-type': 'application/json; charset=UTF-8',
+    		'Content-type': 'application/json',
   		}
-  	});
+  	})
+	.then(response => response.json()) 
+	.then(json => console.log(json))
+	.catch(err => console.log(err));
 
 	location.reload( true )
   }
@@ -262,14 +285,14 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
   }
 
   function editar_api(i) {
-	fetch('http://localhost:5000/api/recipes', {
+	fetch('http://localhost:5000/api/recipes/'+i, {
   		method: 'PUT',
   		body: JSON.stringify({
     		instructions:instructions,
 			ingredients:ingredients,
   		}),
   		headers: {
-    		'Content-type': 'application/json; charset=UTF-8',
+    		'Content-type': 'application/json',
   		}
   	});
 

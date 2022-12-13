@@ -228,7 +228,7 @@ class Api_2_1(Resource):
 
             query = {"_id": ret.inserted_id()}
 
-            return dumps(query)
+            return query
 
         else:
             return {'error':'Content-Type not supported!'}, 500

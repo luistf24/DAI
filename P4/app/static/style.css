@@ -14,7 +14,9 @@ div {
 body {
     background-color: #DDDDDD;
     color: #EE6352;
+ 	font-size: 1em;
 }
+
 
 body.oscuro {
     background-color: rgb(53,53,53);
