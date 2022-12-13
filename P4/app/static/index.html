@@ -78,7 +78,7 @@
                          </button>
                   </td>
                   <td>
-	   <button type="button" data-bs-dismiss="modal" onclick="editar('${fila._id}','${fila.name}')" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#deleteModal">Edit</button>
+	   <button type="button" data-bs-dismiss="modal" onclick="editar('${fila._id}','${fila.name}')" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createModal">Edit</button>
 	   <button type="button" data-bs-dismiss="modal" onclick="borrar('${fila._id}','${fila.name}')" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Delete</button>
                   </td>
                   </tr>`         // ES6 templates
@@ -123,6 +123,8 @@
                             <input type="number" class="form-control input-lg" id="num_instructions" value="">
                         <label class="control-label">Número de ingredientes:</label>
                             <input type="number" class="form-control input-lg" id="num_ingredients" value="">
+                        <label class="control-label">Nombre con el que se le conoce:</label>
+                            <input type="" class="form-control input-lg" id="slug" value="">
 						<br>
 				 <div class="form-group">
                         <div>
@@ -136,6 +138,7 @@
   }
 
 	var name = "klk";
+	var slug = "slug";
 	var num_ingredients = 0;
 	var num_instructions = 0;
 	var instructions_list = [];
@@ -144,6 +147,7 @@
 
   function instructions() {
 	name 				= document.getElementById('name').value;
+	slug				= document.getElementById('slug').value;
 	num_instructions 	= document.getElementById('num_instructions').value;
 	num_ingredients 	= document.getElementById('num_ingredients').value;
 	
@@ -250,7 +254,7 @@
 		name: name,
 		instructions: instructions_list,
 		ingredients: ingredients_list,
-		slug: "slug"
+		slug: slug
 	}
 
 	fetch('http://localhost:5000/api/recipes', {
@@ -268,48 +272,160 @@
   }
 
 
+var id;
+
 function editar(i,j) {  // saca un modal con la información de cada coctel
-	let html_str = 
+	id = i;
+	name = j;
+	let html_str = "Editar: "; 
+	html_str += 
 		`
 			<form role="form">
                     <div class="form-group">
-                        <label class="control-label">Preparación:</label>
-                            <input type="" class="form-control input-lg" id="instructions" value="">
-                        <label class="control-label">Ingredientes:</label>
-                            <input type="" class="form-control input-lg" id="ingredients" value="">
+                        <label class="control-label">Número de pasos nuevos para prepararla:</label>
+                            <input type="number" class="form-control input-lg" id="num_instructions" value="">
+                        <label class="control-label">Número de ingredientes nuevos:</label>
+                            <input type="number" class="form-control input-lg" id="num_ingredients" value="">
 						<br>
 				 <div class="form-group">
                         <div>
-	   <button type="button" class="btn btn-success" onclick="aditar_api(${i})">Editar</button>
+                            <button type="button" class="btn btn-success" onclick="instructions_editar()">Continuar</button>
                         </div>
                     </div>
 			</form>
-		`;
-	$("#modal_title_borrar").html(j)
-	$("#modal_body_borrar").html(html_str);
+		`
+
+	$("#modal_title_create").html(j)
+	$("#modal_body_create").html(html_str);
   }
 
-  function editar_api(i) {
-	fetch('http://localhost:5000/api/recipes/'+i, {
+  function instructions_editar() {
+	num_instructions 	= document.getElementById('num_instructions').value;
+	num_ingredients 	= document.getElementById('num_ingredients').value;
+	
+	let html_str = "Instruciones: "; 
+	html_str += 
+		`
+			<form role="form">
+                    <div class="form-group">
+	   					<label class="control-label">Número de pasos para prepararla: ${num_instructions}</label>
+						<br>
+		`
+	let inst;
+	for (let i = 0; i < num_instructions; i++) {
+		inst = "i_"+i;
+		html_str +=
+		`
+	   		<label class="control-label">Paso ${i+1}:</label>
+	   		<input type="" class="form-control input-lg" id="${inst}" value="">
+	   `
+	}
+
+	html_str += 
+		`
+	   			<br>
+				 <div class="form-group">
+                        <div>
+	   						<button type="button" class="btn btn-success" onclick="ingredients_editar()">Continuar</button>
+                        </div>
+                    </div>
+			</form>
+		`
+	$("#modal_title_create").html(name)
+	$("#modal_body_create").html(html_str);
+  }
+
+
+  function ingredients_editar() {
+	let inst;
+	for(i=0; i< num_instructions; i++) {
+		inst = "i_"+i;
+		instructions_list.push(document.getElementById(inst).value);
+	}
+	
+	let html_str = "Ingredientes: "; 
+	html_str += 
+		`
+			<form role="form">
+                    <div class="form-group">
+	   					<label class="control-label">Número de ingredientes: ${num_instructions}</label>
+						<br>
+		`
+	let can;
+
+	for (let i = 0; i < num_ingredients; i++) {
+		ing = "ing_"+i;
+		can = "can_"+i;
+		html_str +=
+		`
+	   		<label class="control-label">Ingrediente ${i+1}:</label>
+	   		<input type="" class="form-control input-lg" id="${ing}" value="">
+	   		<label class="control-label">Cantidad:</label>
+	   		<input type="number" class="form-control input-lg" id="${can}" 
+	   `
+	}
+
+	html_str += 
+		`
+			<div class="form-group">
+	   				<br>
+                        <div>
+	   						<button type="button" class="btn btn-success" onclick="editar_api()">Continuar</button>
+                        </div>
+                    </div>
+			</form>
+		`
+	$("#modal_title_create").html(name)
+	$("#modal_body_create").html(html_str);
+  }
+
+
+  function editar_api() {
+
+	data= {
+		instructions: instructions_list,
+		ingredients: ingredients_list,
+	}
+
+	fetch('http://localhost:5000/api/recipes/'+id, {
   		method: 'PUT',
-  		body: JSON.stringify({
-    		instructions:instructions,
-			ingredients:ingredients,
-  		}),
+  		body: JSON.stringify(data),
   		headers: {
     		'Content-type': 'application/json',
   		}
   	});
 
 	location.reload( true )
-
   }
 
 
+function busqueda() {
 
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+
+}
 </script>
+<div class="input-group mb-3">
+  <input type="text" id="myInput" onkeyup="busqueda()" class="form-control" placeholder="Introduzca el cóctel a buscar">
+</div>
 <!-- en el HTML-->
-<table class="table table-sm">
+<table class="table table-sm" id="myTable">
   <thead>
     <tr>
       <th>N</th>
@@ -369,7 +485,6 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
     </div>
   </div>
 </div>
-
 
 </body>
 </html>
