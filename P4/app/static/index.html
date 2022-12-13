@@ -22,14 +22,19 @@
 		<nav class="navbar bg-light">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/">Práctica 4</a>
-
-					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Oscuro</button>
-					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(1.1)">+</button>
-					<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(0.9)">-</button>
+					<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  						<div class="btn-group mr-2" role="group" aria-label="First group">
+								<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(1.1)">+</button>
+								<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeSize(0.9)">-</button>
+								<button class="btn btn-sm btn-outline-secondary" type="button" onclick="changeMode()">Modo Oscuro</button>
+						</div>
+					</div>
 					<button type="button" class="btn btn-primary btn-sm" onclick="add_1()" data-toggle="modal" data-target="#createModal">Añadir receta</button>
 			</div>
 		</nav>
 		<script type="text/javascript">
+
+			localStorage.setItem('Tamaño', 1)
 			function changeMode() { 
 				var cuerpoweb = document.body;
 				if(localStorage.getItem('Modo') == 'Oscuro') {
@@ -43,9 +48,9 @@
 			}
 
 			function changeSize(size) {
-				let currentZoom = parseFloat(document.body.style.zoom) || 1
-   				document.body.style.zoom = currentZoom * size
-				
+				localStorage.setItem('Tamaño', localStorage.getItem('Tamaño')*size)
+				document.body.style.transform = "scale("+localStorage.getItem('Tamaño')+")";
+				document.body.style.transformOrigin = "0 0";
 			}
 
 		</script>	
