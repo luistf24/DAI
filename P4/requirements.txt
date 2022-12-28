@@ -2,3 +2,4 @@ Flask
 pymongo
 flask-restful
 flask_cors
+markup

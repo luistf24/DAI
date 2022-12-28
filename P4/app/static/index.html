@@ -11,12 +11,10 @@
 	<body>
 		<script>
 			var cuerpoweb = document.body;
-			if(localStorage.getItem('Modo') == 'Oscuro') {
+			if(localStorage.getItem('Modo') == 'Oscuro')
 				cuerpoweb.classList.toggle("claro"); 
-			}
-			else{
+			else
 				cuerpoweb.classList.toggle("oscuro"); 
-			}		
 		</script>
 
 		<nav class="navbar bg-light">
@@ -41,7 +39,7 @@
 					localStorage.setItem('Modo', 'Claro')
 					location.reload( true )
 				}
-				else{
+				else {
 					localStorage.setItem('Modo', 'Oscuro')
 					location.reload( true )
 				}
@@ -53,7 +51,7 @@
 				document.body.style.transformOrigin = "0 0";
 			}
 
-		</script>	
+</script>	
 <script>
   const recetas = []              // declaraciones   
   let html_str  = ''              // de variables
@@ -66,7 +64,9 @@
           i++
           recetas.push(fila)      // se guardan para después sacar cada una             
           // ES6 templates
-		  ingredientes = []
+		  ingredientes 	= []
+		  cantidad = []
+		  temp = null
 		  fila.ingredients.forEach(ingrediente => {ingredientes.push(ingrediente.name)});
           html_str += `<tr>
                          <td>${i}</td>
@@ -85,14 +85,41 @@
       });
       document.getElementById('tbody').innerHTML=html_str  // se pone el html en su sitio
   })
+	
+function detalle(j,k,t) {  // saca un modal con la información de cada coctel
+	let html_str = "<b>Ingredientes: </b>";
+	var cont='' ;
 
-  function detalle(j,k,t) {  // saca un modal con la información de cada coctel
-	let html_str = "<b>Ingredientes: </b>" + k + "<br>" + "<b>Preparación: </b>" + t; 
+	var contador=0;
+	let x = 0;
+	for(x in k) {
+		if (k[x] == ',' || k[x] == '')  {
+			html_str += "<p> &ensp; - "+cont + "</p> ";
+			cont = '';
+		}
+		else
+			cont+=k[x];
+	}
+	html_str += "<p> &ensp; - "+cont + "</p> ";
+
+	x = 0;
+	html_str += "<b>Preparación: </b>"; 
+	cont=''
+	for(x in t) {
+		if (t[x] == ',')  {
+			html_str += "<p> &ensp;"+cont + "</p>"  ;
+			cont = '';
+		}
+		else
+			cont+=t[x];
+	}
+	html_str += "<p> &ensp;"+cont + "</p>"  ;
+
 	$("#modal_title").html(j)
 	$("#modal_body").html(html_str);
-  }
+}
 
-  function borrar(i,j) {  // saca un modal con la información de cada coctel
+function borrar(i,j) {  // saca un modal con la información de cada coctel
 	let html_str = "Seguro que quiere borrar: " + "<b>" + j + "</b>"; 
 	html_str += 
 		`<div class="modal-footer">
@@ -100,7 +127,7 @@
       	</div>`
 	$("#modal_title_borrar").html(j)
 	$("#modal_body_borrar").html(html_str);
-  }
+}
 
   function borrar_api(i) {
 		fetch("http://localhost:5000/api/recipes/"+i,  {
@@ -109,9 +136,9 @@
   		.then(res => res.json())        // respuesta en json, otra promise
 
 		location.reload( true )
-  }
+}
 
-  function add_1() {
+function add_1() {
 	let html_str = "Añadir: "; 
 	html_str += 
 		`
@@ -135,9 +162,9 @@
 		`
 	$("#modal_title_create").html("Añadir Receta")
 	$("#modal_body_create").html(html_str);
-  }
+}
 
-	var name = "klk";
+	var name = "temp";
 	var slug = "slug";
 	var num_ingredients = 0;
 	var num_instructions = 0;
@@ -145,7 +172,7 @@
 	var ingredients_list = [];
 	var cantindad_list = [];
 
-  function instructions() {
+function instructions() {
 	name 				= document.getElementById('name').value;
 	slug				= document.getElementById('slug').value;
 	num_instructions 	= document.getElementById('num_instructions').value;
@@ -181,10 +208,10 @@
 		`
 	$("#modal_title_create").html(name)
 	$("#modal_body_create").html(html_str);
-  }
+}
 
 
-  function ingredients() {
+function ingredients() {
 	let inst;
 	for(i=0; i< num_instructions; i++) {
 		inst = "i_"+i;
@@ -225,9 +252,9 @@
 		`
 	$("#modal_title_create").html(name)
 	$("#modal_body_create").html(html_str);
-  }
+}
 
-  function add() {
+function add() {
 	let ing;
 	let can;
 	let temp1;
@@ -269,12 +296,12 @@
 	.catch(err => console.log(err));
 
 	location.reload( true )
-  }
+}
 
 
 var id;
 
-function editar(i,j) {  // saca un modal con la información de cada coctel
+function editar(i,j) {  
 	id = i;
 	name = j;
 	let html_str = "Editar: "; 
@@ -297,9 +324,9 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
 
 	$("#modal_title_create").html(j)
 	$("#modal_body_create").html(html_str);
-  }
+}
 
-  function instructions_editar() {
+function instructions_editar() {
 	num_instructions 	= document.getElementById('num_instructions').value;
 	num_ingredients 	= document.getElementById('num_ingredients').value;
 	
@@ -333,10 +360,10 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
 		`
 	$("#modal_title_create").html(name)
 	$("#modal_body_create").html(html_str);
-  }
+}
 
 
-  function ingredients_editar() {
+function ingredients_editar() {
 	let inst;
 	for(i=0; i< num_instructions; i++) {
 		inst = "i_"+i;
@@ -377,10 +404,10 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
 		`
 	$("#modal_title_create").html(name)
 	$("#modal_body_create").html(html_str);
-  }
+}
 
 
-  function editar_api() {
+function editar_api() {
 
 	data= {
 		instructions: instructions_list,
@@ -396,26 +423,26 @@ function editar(i,j) {  // saca un modal con la información de cada coctel
   	});
 
 	location.reload( true )
-  }
+}
 
 
 function busqueda() {
 
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
+  var entrada, filtro, tabla, tr, td, i, txtValue;
+  entrada = document.getElementById("myInput");
+  filtro = entrada.value.toUpperCase();
+  tabla = document.getElementById("myTable");
+  tr = tabla.getElementsByTagName("tr");
 
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[1];
     if (td) {
       txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+      if (txtValue.toUpperCase().indexOf(filtro) > -1)
         tr[i].style.display = "";
-      } else {
+      else
         tr[i].style.display = "none";
-      }
     }
   }
 

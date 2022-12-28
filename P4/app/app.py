@@ -171,13 +171,23 @@ def api_1_2(id):
 
                 if(request.form.get('ingredients')):
                     ingredientes = request.form['ingredients']
-                    ingrediente = db.recipes.find({ query}, {'ingredients.name': {'$regex': ingredientes}}) 
+                    ingrediente = db.recipes.find({query}, {'ingredients.name': {'$regex': ingredientes}}) 
 
-                    if(ingrediente.count() == 0):
-                        db.recipies.update_one(query, {"$push": {"ingredients": ingredientes}})
+                    if(ingrediente.count() != 0):
+                        db.recipies.update_one(query, {'$push': {'ingredients': ingredientes}})
 
                     else:
-                        db.recipes.update_one(query, {ingrediente: ingredientes})
+                        db.recipes.update_one(query, {'ingredients': ingredientes})
+
+                if(request.form.get('instructions')):
+                    instruciones = request.form['instructions']
+                    instrucion = db.recipes.find({ query}, {'instructions': {'$regex': instruciones}}) 
+
+                    if(instrucion.count() != 0):
+                        db.recipies.update_one(query, {'$push': {'instructions': instruciones}})
+
+                    else:
+                        db.recipes.update_one(query, {'instructions': instruciones})
 
             return dumps(query)
 
